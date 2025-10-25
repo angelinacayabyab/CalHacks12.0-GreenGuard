@@ -1,7 +1,6 @@
-# CalHacks12.0
+# CalHacks12.0 - UC Berkeley's Exclusive Hackathon
 
-# 🛡️ GreenGuard 
-## Author: Angelina Cayabyab
+# 🛡️ GreenGuard - Created By Angelina Cayabyab
 
 **Protecting You From Greenwashing**
 
@@ -201,11 +200,11 @@ greenguard/
 
 ## 🎓 Background & Inspiration
 
-GreenGuard was created by [Your Name], leveraging background in:
+GreenGuard was created by Angelina Cayabyab with a background in:
+- **Corporate ESG** - Bay Area Air District, Management Consulting (Genentech, Beckman Coulter Diagnostics, Ultragenyx, Novozymes, BlackBerry, 5 Startups). 
 - **UC Berkeley MPH** (Master of Public Health) - Environmental Health
-- **Corporate ESG** - Environmental, Social, Governance experience
 - **UC Davis MBA** - Business strategy and corporate responsibility
-- **Georgia Tech MSCS** - Computer Science and AI
+- **Georgia Tech OMSCS** - ML/AI
 
 ### Why This Matters
 
