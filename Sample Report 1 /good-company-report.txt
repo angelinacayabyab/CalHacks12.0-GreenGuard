@@ -1,0 +1,25 @@
+==================================================
+Expected Score: 75-90 (Low Greenwashing)
+==================================================
+
+Environmental Impact Report 2024 - Third-Party Verified by Bureau Veritas
+
+Carbon Emissions Reduction:
+Reduced Scope 1 and 2 emissions by 23% from 45,000 to 34,650 metric tons CO2e compared to 2023 baseline. Scope 3 emissions decreased by 12% through supplier engagement program. Third-party verification completed by Bureau Veritas (Certificate #ENV-2024-5829).
+
+Renewable Energy Transition:
+Currently sourcing 67% of electricity from renewable sources: 45% wind power through PPAs with NextEra Energy, 22% solar from onsite installations. Installed 2.3MW solar arrays at Ohio and Texas facilities in Q2 2024. Target: 85% renewable by 2026.
+
+Water Conservation:
+Reduced water consumption by 2.1 million gallons (18% decrease) through closed-loop cooling system implementation in coating operations. Data validated by external audit conducted by Deloitte in their ESG Assurance Report 2024.
+
+Waste Management:
+Diverted 89% of manufacturing waste from landfills. Implemented closed-loop aluminum recycling program, reducing virgin material usage by 31%. Partnered with TerraCycle for hard-to-recycle materials.
+
+Supply Chain Engagement:
+78% of Tier 1 suppliers (by spend) completed CDP Climate Change questionnaire. Identified 12 high-emissions suppliers and established joint reduction targets. Working with MIT Climate CoLab on supplier assessment methodology.
+
+Challenges and Areas for Improvement:
+Manufacturing expansion at Vietnam facility increased absolute emissions by 8,000 metric tons in 2024. Planning additional renewable procurement and efficiency measures to offset this increase by Q3 2025. Employee commuting emissions (Scope 3) remain difficult to measure accurately - piloting new tracking system in 2025.
+
+Data Assurance: All metrics verified by third party. Methodology aligned with GRI Standards and TCFD recommendations. Full data tables available in appendix with calculation methodologies.
