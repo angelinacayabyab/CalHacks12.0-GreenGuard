@@ -324,14 +324,11 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📞 Contact & Support
 
-- **Creator**: [Your Name]
-- **Email**: [your.email@example.com]
-- **LinkedIn**: [Your LinkedIn Profile]
+- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/angelina-cayabyab-master/)
 - **Project Demo**: [Devpost Link]
-- **Issues**: [GitHub Issues](https://github.com/yourusername/greenguard/issues)
 
 ### Hackathon Presentation
-Watch the Cal Hacks 12.0 demo: [Insert Video Link]
+Watch the Cal Hacks 12.0 demo: [TBD]
 
 ---
 
