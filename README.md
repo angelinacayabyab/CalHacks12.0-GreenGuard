@@ -72,7 +72,7 @@ GreenGuard uses advanced pattern recognition to analyze sustainability reports a
 
 ### Option 2: Live Demo
 
-Visit the live demo: [Insert Deployment URL Here]
+Visit the live demo: [Pending]
 
 ### Option 3: Run as React App
 
