@@ -1,6 +1,4 @@
-==================================================
 HOW TO USE THESE SAMPLES:
-==================================================
 
 1. Copy each section above into separate .txt files
 2. Upload to GreenGuard for testing
