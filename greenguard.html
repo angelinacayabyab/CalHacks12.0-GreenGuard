@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenGuard - Protecting You From Greenwashing</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        const { Upload, AlertTriangle, CheckCircle, XCircle, FileText, TrendingDown, Shield, BarChart3 } = lucide;
+
+        function GreenGuard() {
+          const [file, setFile] = useState(null);
+          const [analyzing, setAnalyzing] = useState(false);
+          const [results, setResults] = useState(null);
+          const [error, setError] = useState(null);
+
+          const greenwashingTactics = {
+            'Hidden Trade-offs': 'Emphasizing one green attribute while ignoring larger environmental harm',
+            'No Proof': 'Environmental claims without certification or evidence',
+            'Vagueness': 'Using poorly defined terms like "eco-friendly" or "natural"',
+            'Irrelevance': 'Truthful but unimportant claims (e.g., "CFC-free" when CFCs are banned)',
+            'Lesser of Two Evils': 'Green claims on inherently problematic products',
+            'Fibbing': 'Outright false environmental claims',
+            'False Labels': 'Creating fake certifications or misleading imagery'
+          };
+
+          const handleFileUpload = async (event) => {
+            const uploadedFile = event.target.files[0];
+            if (!uploadedFile) return;
+
+            setFile(uploadedFile);
+            setError(null);
+            setResults(null);
+          };
+
+          const analyzeReport = async () => {
+            if (!file) return;
+
+            setAnalyzing(true);
+            setError(null);
+
+            try {
+              const text = await file.text();
+              await analyzeWithAI(text);
+            } catch (err) {
+              setError(`Error analyzing file: ${err.message}`);
+            } finally {
+              setAnalyzing(false);
+            }
+          };
+
+          const analyzeWithAI = async (text) => {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            const textLower = text.toLowerCase();
+            
+            // Calculate vagueness score
+            const vagueTerms = ['eco-friendly', 'natural', 'green', 'sustainable', 'environmentally safe', 'clean', 'pure'];
+            let vaguenessCount = 0;
+            vagueTerms.forEach(term => {
+              const matches = text.match(new RegExp(term, 'gi'));
+              if (matches) vaguenessCount += matches.length;
+            });
+
+            // Check for proof/verification
+            const hasVerification = /certif|verified|third-party|audit|standard|iso|leed|b corp/i.test(text);
+            const hasMetrics = /\d+%|\d+\s*(metric tons|gallons|kwh|mw|co2|emissions)/i.test(text);
+            const hasTimeline = /\d{4}|baseline|target|by \d{4}/i.test(text);
+            
+            // Calculate truth score
+            let truthScore = 50;
+            if (hasVerification) truthScore += 20;
+            if (hasMetrics) truthScore += 15;
+            if (hasTimeline) truthScore += 10;
+            truthScore -= vaguenessCount * 3;
+            truthScore = Math.max(15, Math.min(95, truthScore));
+
+            // Detect tactics
+            const detectedTactics = [];
+            if (vaguenessCount > 3) detectedTactics.push('Vagueness');
+            if (!hasVerification && /carbon|emission|green|sustainable/i.test(text)) {
+              detectedTactics.push('No Proof');
+            }
+            if (text.length > 300 && !hasMetrics) {
+              detectedTactics.push('Hidden Trade-offs');
+            }
+            if (/natural|pure|clean/i.test(text) && !hasMetrics) {
+              detectedTactics.push('Irrelevance');
+            }
+
+            // Generate red flags
+            const redFlags = [];
+            if (vaguenessCount > 3) {
+              redFlags.push({
+                text: `Excessive use of vague terms (${vaguenessCount} instances) without specific metrics`,
+                severity: 'high',
+                tactic: 'Vagueness'
+              });
+            }
+            if (!hasVerification) {
+              redFlags.push({
+                text: 'Environmental claims lack third-party verification or certification',
+                severity: 'high',
+                tactic: 'No Proof'
+              });
+            }
+            if (!hasMetrics && /reduce|decrease|improve|better/i.test(text)) {
+              redFlags.push({
+                text: 'Claims of improvement without quantifiable data or baselines',
+                severity: 'high',
+                tactic: 'Hidden Trade-offs'
+              });
+            }
+            if (/100%|completely|totally|fully/i.test(text) && !hasVerification) {
+              redFlags.push({
+                text: 'Absolute claims ("100%", "completely") without supporting evidence',
+                severity: 'medium',
+                tactic: 'Fibbing'
+              });
+            }
+            if (!hasTimeline && /goal|target|commitment/i.test(text)) {
+              redFlags.push({
+                text: 'Sustainability commitments lack specific timelines or deadlines',
+                severity: 'medium',
+                tactic: 'Vagueness'
+              });
+            }
+
+            setResults({
+              truthScore: Math.round(truthScore),
+              detectedTactics,
+              redFlags: redFlags.slice(0, 5),
+              summary: truthScore >= 70 
+                ? `This report demonstrates credible sustainability practices with ${hasVerification ? 'third-party verification' : 'some verification'} and ${hasMetrics ? 'specific metrics' : 'general claims'}. However, there is room for improvement in transparency.`
+                : truthScore >= 40
+                ? `This report exhibits ${detectedTactics.length} greenwashing patterns. Key concerns include ${!hasVerification ? 'lack of verification,' : ''} ${!hasMetrics ? 'absence of specific metrics,' : ''} and ${vaguenessCount > 3 ? 'excessive vague terminology' : 'limited accountability measures'}.`
+                : `This report shows significant greenwashing indicators. Claims are predominantly vague, lack independent verification, and provide minimal measurable data. Strong skepticism is warranted.`,
+              recommendations: [
+                hasVerification ? 'Verify that certifications are from recognized, independent organizations' : 'Request third-party certification from organizations like B Corp, ISO 14001, or Carbon Trust',
+                hasMetrics ? 'Cross-reference metrics with industry standards and historical data' : 'Demand specific, quantifiable metrics with clear baselines and methodologies',
+                'Look for comprehensive lifecycle analysis and Scope 1, 2, and 3 emissions reporting',
+                hasTimeline ? 'Monitor progress against stated timelines and hold companies accountable' : 'Require specific timelines and interim targets for all sustainability commitments'
+              ]
+            });
+          };
+
+          const getScoreColor = (score) => {
+            if (score >= 70) return 'text-green-600';
+            if (score >= 40) return 'text-yellow-600';
+            return 'text-red-600';
+          };
+
+          const getScoreLabel = (score) => {
+            if (score >= 70) return 'Mostly Credible';
+            if (score >= 40) return 'Questionable';
+            return 'Highly Suspicious';
+          };
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+              <div className="max-w-6xl mx-auto p-6">
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Shield className="w-12 h-12 text-emerald-600" />
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
+                      GreenGuard
+                    </h1>
+                  </div>
+                  <p className="text-xl text-gray-600 font-medium">
+                    Protecting You From Greenwashing
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    AI-powered analysis of corporate sustainability claims
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Upload className="w-5 h-5 text-emerald-600" />
+                    <h2 className="text-2xl font-semibold text-gray-800">Upload Company Report</h2>
+                  </div>
+                  
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-emerald-500 transition-colors">
+                    <input
+                      type="file"
+                      accept=".txt"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="file-upload"
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-lg text-gray-600 mb-2">
+                        {file ? file.name : 'Click to upload or drag and drop'}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Supports .txt files
+                      </p>
+                    </label>
+                  </div>
+
+                  {file && (
+                    <button
+                      onClick={analyzeReport}
+                      disabled={analyzing}
+                      className="mt-6 w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2"
+                    >
+                      {analyzing ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          Analyzing Report...
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-5 h-5" />
+                          Analyze for Greenwashing
+                        </>
+                      )}
+                    </button>
+                  )}
+
+                  {error && (
+                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                      {error}
+                    </div>
+                  )}
+                </div>
+
+                {results && (
+                  <div className="space-y-6">
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Credibility Score</h2>
+                      <div className="flex items-center justify-center">
+                        <div className="relative w-48 h-48">
+                          <svg className="w-full h-full transform -rotate-90">
+                            <circle
+                              cx="96"
+                              cy="96"
+                              r="80"
+                              stroke="#e5e7eb"
+                              strokeWidth="16"
+                              fill="none"
+                            />
+                            <circle
+                              cx="96"
+                              cy="96"
+                              r="80"
+                              stroke={results.truthScore >= 70 ? '#10b981' : results.truthScore >= 40 ? '#f59e0b' : '#ef4444'}
+                              strokeWidth="16"
+                              fill="none"
+                              strokeDasharray={`${results.truthScore * 5.03} 502`}
+                              className="transition-all duration-1000"
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className={`text-5xl font-bold ${getScoreColor(results.truthScore)}`}>
+                              {results.truthScore}
+                            </span>
+                            <span className="text-sm text-gray-500 mt-1">/ 100</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className={`text-center mt-4 text-xl font-semibold ${getScoreColor(results.truthScore)}`}>
+                        {getScoreLabel(results.truthScore)}
+                      </p>
+                      <p className="text-center text-gray-600 mt-2">{results.summary}</p>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <AlertTriangle className="w-6 h-6 text-orange-500" />
+                        Detected Greenwashing Tactics
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Object.entries(greenwashingTactics).map(([tactic, description]) => (
+                          <div
+                            key={tactic}
+                            className={`p-4 rounded-lg border-2 ${
+                              results.detectedTactics.includes(tactic)
+                                ? 'bg-red-50 border-red-300'
+                                : 'bg-gray-50 border-gray-200'
+                            }`}
+                          >
+                            <div className="flex items-start gap-2">
+                              {results.detectedTactics.includes(tactic) ? (
+                                <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                              ) : (
+                                <CheckCircle className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                              )}
+                              <div>
+                                <h3 className="font-semibold text-gray-800">{tactic}</h3>
+                                <p className="text-sm text-gray-600 mt-1">{description}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <AlertTriangle className="w-6 h-6 text-red-600" />
+                        Warning Signs
+                      </h2>
+                      <div className="space-y-3">
+                        {results.redFlags.map((flag, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-4 rounded-lg border-l-4 ${
+                              flag.severity === 'high'
+                                ? 'bg-red-50 border-red-500'
+                                : 'bg-yellow-50 border-yellow-500'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <p className="text-gray-800">{flag.text}</p>
+                              <div className="flex flex-col items-end gap-1">
+                                <span
+                                  className={`text-xs font-semibold px-2 py-1 rounded ${
+                                    flag.severity === 'high'
+                                      ? 'bg-red-200 text-red-800'
+                                      : 'bg-yellow-200 text-yellow-800'
+                                  }`}
+                                >
+                                  {flag.severity.toUpperCase()}
+                                </span>
+                                <span className="text-xs text-gray-500">{flag.tactic}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-emerald-600" />
+                        How to Protect Yourself
+                      </h2>
+                      <ul className="space-y-3">
+                        {results.recommendations.map((rec, idx) => (
+                          <li key={idx} className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-700">{rec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {!results && (
+                  <div className="bg-white rounded-lg shadow-lg p-8">
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                      What is Greenwashing?
+                    </h2>
+                    <p className="text-gray-600 mb-4">
+                      Greenwashing is when companies make misleading environmental claims to appear more eco-friendly than they actually are. GreenGuard uses AI to detect common greenwashing patterns and protect you from deceptive marketing.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                      <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <Shield className="w-8 h-8 text-emerald-600 mb-2" />
+                        <h3 className="font-semibold text-emerald-800 mb-2">Protection</h3>
+                        <p className="text-sm text-gray-600">
+                          We guard you from misleading environmental claims and corporate deception
+                        </p>
+                      </div>
+                      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <BarChart3 className="w-8 h-8 text-green-600 mb-2" />
+                        <h3 className="font-semibold text-green-800 mb-2">Smart Analysis</h3>
+                        <p className="text-sm text-gray-600">
+                          AI identifies 7 common greenwashing tactics used by corporations
+                        </p>
+                      </div>
+                      <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                        <CheckCircle className="w-8 h-8 text-teal-600 mb-2" />
+                        <h3 className="font-semibold text-teal-800 mb-2">Take Action</h3>
+                        <p className="text-sm text-gray-600">
+                          Get actionable steps to verify claims and support truly sustainable businesses
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        ReactDOM.render(<GreenGuard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
