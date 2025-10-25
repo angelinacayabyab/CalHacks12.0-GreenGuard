@@ -324,6 +324,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📞 Contact & Support
 
+- **Email**: [Email](acayabyab3@gatech.edu)
 - **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/angelina-cayabyab-master/)
 - **Project Demo**: [Devpost Link]
 
