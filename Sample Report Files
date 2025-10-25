@@ -1,0 +1,85 @@
+==================================================
+SAMPLE REPORT 1: bad-company-report.txt
+Expected Score: 20-40 (High Greenwashing)
+==================================================
+
+Sustainability Report 2024
+
+Our company is deeply committed to sustainability and being eco-friendly. We believe in creating a greener future for all. Our products are 100% natural and environmentally safe, made with clean processes that are kind to the planet.
+
+We are proud to announce that we are now carbon neutral and climate-friendly. Our operations use green energy and we support renewable initiatives globally. Everything we do is sustainable and aligned with nature.
+
+Our packaging is recyclable and we use eco-friendly materials throughout our supply chain. We're working toward a cleaner tomorrow with our sustainable practices. Our commitment to the environment is unwavering and we continue to innovate in green technology.
+
+We've reduced our footprint significantly and are certified as an environmentally responsible company. Join us in our mission to protect the planet with our sustainable solutions. Together, we can make a difference for future generations.
+
+
+==================================================
+SAMPLE REPORT 2: good-company-report.txt
+Expected Score: 75-90 (Low Greenwashing)
+==================================================
+
+Environmental Impact Report 2024 - Third-Party Verified by Bureau Veritas
+
+Carbon Emissions Reduction:
+Reduced Scope 1 and 2 emissions by 23% from 45,000 to 34,650 metric tons CO2e compared to 2023 baseline. Scope 3 emissions decreased by 12% through supplier engagement program. Third-party verification completed by Bureau Veritas (Certificate #ENV-2024-5829).
+
+Renewable Energy Transition:
+Currently sourcing 67% of electricity from renewable sources: 45% wind power through PPAs with NextEra Energy, 22% solar from onsite installations. Installed 2.3MW solar arrays at Ohio and Texas facilities in Q2 2024. Target: 85% renewable by 2026.
+
+Water Conservation:
+Reduced water consumption by 2.1 million gallons (18% decrease) through closed-loop cooling system implementation in coating operations. Data validated by external audit conducted by Deloitte in their ESG Assurance Report 2024.
+
+Waste Management:
+Diverted 89% of manufacturing waste from landfills. Implemented closed-loop aluminum recycling program, reducing virgin material usage by 31%. Partnered with TerraCycle for hard-to-recycle materials.
+
+Supply Chain Engagement:
+78% of Tier 1 suppliers (by spend) completed CDP Climate Change questionnaire. Identified 12 high-emissions suppliers and established joint reduction targets. Working with MIT Climate CoLab on supplier assessment methodology.
+
+Challenges and Areas for Improvement:
+Manufacturing expansion at Vietnam facility increased absolute emissions by 8,000 metric tons in 2024. Planning additional renewable procurement and efficiency measures to offset this increase by Q3 2025. Employee commuting emissions (Scope 3) remain difficult to measure accurately - piloting new tracking system in 2025.
+
+Data Assurance: All metrics verified by third party. Methodology aligned with GRI Standards and TCFD recommendations. Full data tables available in appendix with calculation methodologies.
+
+
+==================================================
+SAMPLE REPORT 3: mixed-company-report.txt
+Expected Score: 45-65 (Medium Greenwashing)
+==================================================
+
+Sustainability Update 2024
+
+Our Commitment:
+We're dedicated to reducing our environmental impact through sustainable practices and green innovation. This year we made significant progress toward our sustainability goals.
+
+Achievements:
+- Reduced energy consumption across facilities
+- Improved recycling rates
+- Partnered with environmental organizations
+- Launched eco-friendly product line
+- Invested in renewable energy projects
+
+Our new packaging uses recycled materials and is designed to minimize waste. We've also optimized logistics to reduce transportation emissions.
+
+Energy & Emissions:
+We've decreased our carbon footprint through various efficiency measures. Solar panels were installed at our headquarters, contributing to clean energy usage. We're working toward carbon neutrality.
+
+Products:
+Our products are made with natural ingredients wherever possible. We avoid harmful chemicals and prioritize sustainable sourcing. Customer feedback shows strong support for our environmental initiatives.
+
+Looking Ahead:
+We're committed to continuous improvement and will expand our sustainability programs in 2025. Our goal is to be a leader in corporate environmental responsibility.
+
+
+==================================================
+HOW TO USE THESE SAMPLES:
+==================================================
+
+1. Copy each section above into separate .txt files
+2. Upload to GreenGuard for testing
+3. Expected results:
+   - bad-company-report.txt: Score 20-40 (multiple red flags)
+   - good-company-report.txt: Score 75-90 (few/no red flags)
+   - mixed-company-report.txt: Score 45-65 (some red flags)
+
+These samples demonstrate the range of greenwashing GreenGuard can detect.
