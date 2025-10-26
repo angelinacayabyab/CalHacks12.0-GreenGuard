@@ -8,14 +8,13 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState } = React;
-        const { Upload, AlertTriangle, CheckCircle, XCircle, FileText, TrendingDown, Shield, BarChart3 } = lucide;
 
         function GreenGuard() {
           const [file, setFile] = useState(null);
@@ -61,8 +60,6 @@
           const analyzeWithAI = async (text) => {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const textLower = text.toLowerCase();
-            
             // Calculate vagueness score
             const vagueTerms = ['eco-friendly', 'natural', 'green', 'sustainable', 'environmentally safe', 'clean', 'pure'];
             let vaguenessCount = 0;
@@ -75,7 +72,7 @@
             const hasVerification = /certif|verified|third-party|audit|standard|iso|leed|b corp/i.test(text);
             const hasMetrics = /\d+%|\d+\s*(metric tons|gallons|kwh|mw|co2|emissions)/i.test(text);
             const hasTimeline = /\d{4}|baseline|target|by \d{4}/i.test(text);
-            
+           
             // Calculate truth score
             let truthScore = 50;
             if (hasVerification) truthScore += 20;
@@ -139,7 +136,7 @@
               truthScore: Math.round(truthScore),
               detectedTactics,
               redFlags: redFlags.slice(0, 5),
-              summary: truthScore >= 70 
+              summary: truthScore >= 70
                 ? `This report demonstrates credible sustainability practices with ${hasVerification ? 'third-party verification' : 'some verification'} and ${hasMetrics ? 'specific metrics' : 'general claims'}. However, there is room for improvement in transparency.`
                 : truthScore >= 40
                 ? `This report exhibits ${detectedTactics.length} greenwashing patterns. Key concerns include ${!hasVerification ? 'lack of verification,' : ''} ${!hasMetrics ? 'absence of specific metrics,' : ''} and ${vaguenessCount > 3 ? 'excessive vague terminology' : 'limited accountability measures'}.`
@@ -154,94 +151,101 @@
           };
 
           const getScoreColor = (score) => {
-            if (score >= 70) return 'text-green-600';
-            if (score >= 40) return 'text-yellow-600';
+            if (score >= 70) return 'text-emerald-600';
+            if (score >= 40) return 'text-orange-500';
             return 'text-red-600';
           };
 
           const getScoreLabel = (score) => {
-            if (score >= 70) return 'Mostly Credible';
-            if (score >= 40) return 'Questionable';
-            return 'Highly Suspicious';
+            if (score >= 70) return 'Low Greenwashing Risk';
+            if (score >= 40) return 'Moderate Greenwashing Risk';
+            return 'High Greenwashing Risk';
           };
 
           return (
             <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
-              <div className="max-w-6xl mx-auto p-6">
-                <div className="text-center mb-8">
+              <div className="max-w-6xl mx-auto px-4 py-12">
+                <div className="text-center mb-12">
                   <div className="flex items-center justify-center gap-3 mb-4">
-                    <Shield className="w-12 h-12 text-emerald-600" />
-                    <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
-                      GreenGuard
-                    </h1>
+                    <i className="fas fa-shield-alt text-5xl text-emerald-600"></i>
+                    <h1 className="text-5xl font-bold text-gray-800">GreenGuard</h1>
                   </div>
-                  <p className="text-xl text-gray-600 font-medium">
-                    Protecting You From Greenwashing
+                  <p className="text-xl text-gray-600">
+                    AI-Powered Greenwashing Detection for Sustainability Reports
                   </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    AI-powered analysis of corporate sustainability claims
+                  <p className="text-md text-gray-500 mt-2">
+                    Upload a company's sustainability report to uncover deceptive environmental claims
                   </p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Upload className="w-5 h-5 text-emerald-600" />
-                    <h2 className="text-2xl font-semibold text-gray-800">Upload Company Report</h2>
-                  </div>
-                  
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-emerald-500 transition-colors">
-                    <input
-                      type="file"
-                      accept=".txt"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      id="file-upload"
-                    />
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                      <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-lg text-gray-600 mb-2">
-                        {file ? file.name : 'Click to upload or drag and drop'}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Supports .txt files
-                      </p>
-                    </label>
-                  </div>
+                <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="w-full max-w-md">
+                      <label
+                        htmlFor="file-upload"
+                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-emerald-300 rounded-lg cursor-pointer bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <i className="fas fa-cloud-upload-alt text-5xl text-emerald-600 mb-4"></i>
+                          <p className="mb-2 text-sm text-gray-700">
+                            <span className="font-semibold">Click to upload</span> or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            PDF, TXT, or DOCX (Sustainability Report)
+                          </p>
+                          {file && (
+                            <div className="mt-4 flex items-center gap-2 text-emerald-700">
+                              <i className="fas fa-file-alt"></i>
+                              <span className="text-sm font-medium">{file.name}</span>
+                            </div>
+                          )}
+                        </div>
+                        <input
+                          id="file-upload"
+                          type="file"
+                          className="hidden"
+                          accept=".pdf,.txt,.docx"
+                          onChange={handleFileUpload}
+                        />
+                      </label>
+                    </div>
 
-                  {file && (
                     <button
                       onClick={analyzeReport}
-                      disabled={analyzing}
-                      className="mt-6 w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2"
+                      disabled={!file || analyzing}
+                      className={`px-8 py-3 rounded-lg font-semibold text-white transition-all ${
+                        !file || analyzing
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-xl'
+                      }`}
                     >
                       {analyzing ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                          Analyzing Report...
-                        </>
+                        <span className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Analyzing...
+                        </span>
                       ) : (
-                        <>
-                          <Shield className="w-5 h-5" />
-                          Analyze for Greenwashing
-                        </>
+                        'Analyze for Greenwashing'
                       )}
                     </button>
-                  )}
 
-                  {error && (
-                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-                      {error}
-                    </div>
-                  )}
+                    {error && (
+                      <div className="w-full max-w-md p-4 bg-red-50 border border-red-300 rounded-lg">
+                        <p className="text-red-800">{error}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {results && (
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     <div className="bg-white rounded-lg shadow-lg p-8">
-                      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Credibility Score</h2>
-                      <div className="flex items-center justify-center">
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+                        Truth Score Analysis
+                      </h2>
+                      <div className="flex flex-col items-center">
                         <div className="relative w-48 h-48">
-                          <svg className="w-full h-full transform -rotate-90">
+                          <svg className="transform -rotate-90 w-48 h-48">
                             <circle
                               cx="96"
                               cy="96"
@@ -277,7 +281,7 @@
 
                     <div className="bg-white rounded-lg shadow-lg p-8">
                       <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <AlertTriangle className="w-6 h-6 text-orange-500" />
+                        <i className="fas fa-exclamation-triangle text-orange-500"></i>
                         Detected Greenwashing Tactics
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -292,9 +296,9 @@
                           >
                             <div className="flex items-start gap-2">
                               {results.detectedTactics.includes(tactic) ? (
-                                <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                                <i className="fas fa-times-circle text-red-600 mt-0.5"></i>
                               ) : (
-                                <CheckCircle className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <i className="fas fa-check-circle text-gray-400 mt-0.5"></i>
                               )}
                               <div>
                                 <h3 className="font-semibold text-gray-800">{tactic}</h3>
@@ -308,7 +312,7 @@
 
                     <div className="bg-white rounded-lg shadow-lg p-8">
                       <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <AlertTriangle className="w-6 h-6 text-red-600" />
+                        <i className="fas fa-exclamation-triangle text-red-600"></i>
                         Warning Signs
                       </h2>
                       <div className="space-y-3">
@@ -343,13 +347,13 @@
 
                     <div className="bg-white rounded-lg shadow-lg p-8">
                       <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-emerald-600" />
+                        <i className="fas fa-shield-alt text-emerald-600"></i>
                         How to Protect Yourself
                       </h2>
                       <ul className="space-y-3">
                         {results.recommendations.map((rec, idx) => (
                           <li key={idx} className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                            <i className="fas fa-check-circle text-emerald-600 mt-1"></i>
                             <span className="text-gray-700">{rec}</span>
                           </li>
                         ))}
@@ -368,21 +372,21 @@
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                       <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                        <Shield className="w-8 h-8 text-emerald-600 mb-2" />
+                        <i className="fas fa-shield-alt text-4xl text-emerald-600 mb-2"></i>
                         <h3 className="font-semibold text-emerald-800 mb-2">Protection</h3>
                         <p className="text-sm text-gray-600">
                           We guard you from misleading environmental claims and corporate deception
                         </p>
                       </div>
                       <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                        <BarChart3 className="w-8 h-8 text-green-600 mb-2" />
+                        <i className="fas fa-chart-bar text-4xl text-green-600 mb-2"></i>
                         <h3 className="font-semibold text-green-800 mb-2">Smart Analysis</h3>
                         <p className="text-sm text-gray-600">
                           AI identifies 7 common greenwashing tactics used by corporations
                         </p>
                       </div>
                       <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
-                        <CheckCircle className="w-8 h-8 text-teal-600 mb-2" />
+                        <i className="fas fa-check-circle text-4xl text-teal-600 mb-2"></i>
                         <h3 className="font-semibold text-teal-800 mb-2">Take Action</h3>
                         <p className="text-sm text-gray-600">
                           Get actionable steps to verify claims and support truly sustainable businesses
