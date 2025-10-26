@@ -9,6 +9,12 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+    <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
 </head>
 <body>
     <div id="root"></div>
@@ -36,28 +42,101 @@
             const uploadedFile = event.target.files[0];
             if (!uploadedFile) return;
 
+            console.log('File uploaded:', uploadedFile.name, uploadedFile.type);
             setFile(uploadedFile);
             setError(null);
             setResults(null);
           };
 
           const analyzeReport = async () => {
-            if (!file) return;
+            if (!file) {
+              console.log('No file selected');
+              return;
+            }
 
+            console.log('Starting analysis for:', file.name, 'Type:', file.type);
             setAnalyzing(true);
             setError(null);
 
             try {
-              const text = await file.text();
+              let text = '';
+              
+              // Check file type and extract text accordingly
+              if (file.type === 'application/pdf') {
+                console.log('Extracting text from PDF...');
+                text = await extractTextFromPDF(file);
+                console.log('PDF text extracted, length:', text.length);
+              } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+                         file.name.toLowerCase().endsWith('.docx')) {
+                console.log('Extracting text from DOCX...');
+                text = await extractTextFromDOCX(file);
+                console.log('DOCX text extracted, length:', text.length);
+              } else if (file.type === 'text/plain' || file.name.toLowerCase().endsWith('.txt')) {
+                console.log('Reading text file...');
+                text = await file.text();
+                console.log('Text file read, length:', text.length);
+              } else {
+                // Try to read as text anyway
+                console.log('Unknown file type, attempting to read as text...');
+                try {
+                  text = await file.text();
+                  console.log('Text read successfully, length:', text.length);
+                } catch (e) {
+                  setError('Unsupported file type. Please upload a PDF, TXT, or DOCX file.');
+                  setAnalyzing(false);
+                  return;
+                }
+              }
+              
+              if (!text || text.trim().length === 0) {
+                setError('Could not extract text from the file. The file might be empty or encrypted.');
+                setAnalyzing(false);
+                return;
+              }
+              
+              console.log('Analyzing text...');
               await analyzeWithAI(text);
+              console.log('Analysis complete!');
             } catch (err) {
+              console.error('Analysis error:', err);
               setError(`Error analyzing file: ${err.message}`);
             } finally {
               setAnalyzing(false);
             }
           };
 
+          const extractTextFromPDF = async (file) => {
+            try {
+              const arrayBuffer = await file.arrayBuffer();
+              const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+              let fullText = '';
+
+              // Extract text from each page
+              for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n';
+              }
+
+              return fullText;
+            } catch (error) {
+              throw new Error('Failed to extract text from PDF: ' + error.message);
+            }
+          };
+
+          const extractTextFromDOCX = async (file) => {
+            try {
+              const arrayBuffer = await file.arrayBuffer();
+              const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+              return result.value; // The raw text
+            } catch (error) {
+              throw new Error('Failed to extract text from DOCX: ' + error.message);
+            }
+          };
+
           const analyzeWithAI = async (text) => {
+            console.log('Starting AI analysis...');
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             // Calculate vagueness score
@@ -67,11 +146,13 @@
               const matches = text.match(new RegExp(term, 'gi'));
               if (matches) vaguenessCount += matches.length;
             });
+            console.log('Vagueness count:', vaguenessCount);
 
             // Check for proof/verification
             const hasVerification = /certif|verified|third-party|audit|standard|iso|leed|b corp/i.test(text);
             const hasMetrics = /\d+%|\d+\s*(metric tons|gallons|kwh|mw|co2|emissions)/i.test(text);
             const hasTimeline = /\d{4}|baseline|target|by \d{4}/i.test(text);
+            console.log('Has verification:', hasVerification, 'Has metrics:', hasMetrics, 'Has timeline:', hasTimeline);
            
             // Calculate truth score
             let truthScore = 50;
@@ -148,6 +229,8 @@
                 hasTimeline ? 'Monitor progress against stated timelines and hold companies accountable' : 'Require specific timelines and interim targets for all sustainability commitments'
               ]
             });
+            
+            console.log('Results set with truth score:', Math.round(truthScore));
           };
 
           const getScoreColor = (score) => {
@@ -191,7 +274,7 @@
                             <span className="font-semibold">Click to upload</span> or drag and drop
                           </p>
                           <p className="text-xs text-gray-500">
-                            PDF, TXT, or DOCX (Sustainability Report)
+                            PDF, TXT, or DOCX files (Sustainability Reports)
                           </p>
                           {file && (
                             <div className="mt-4 flex items-center gap-2 text-emerald-700">
@@ -204,7 +287,7 @@
                           id="file-upload"
                           type="file"
                           className="hidden"
-                          accept=".pdf,.txt,.docx"
+                          accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                           onChange={handleFileUpload}
                         />
                       </label>
